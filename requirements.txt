@@ -4,3 +4,4 @@ openai
 streamlit
 scikit-learn
 toml
+fpdf
