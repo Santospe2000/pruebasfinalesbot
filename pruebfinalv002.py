@@ -9,76 +9,6 @@ import re  # Para validar expresiones regulares (email, teléfono)
 # Inicializar el cliente de OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# Mensajes de motivación y sugerencias de entrenamiento
-MOTIVACIONES = [
-    "Nunca se pone mejor que un 'sí'.",
-    "Golpee mientras el hierro está caliente.",
-    "Trabaje con vendedores y compradores motivados.",
-    "Controle su boca.",
-    "No presuma sobre su éxito.",
-    "Enfóquese en las rutas más rápidas de dinero. (Estar ocupado no es igual a ser productivo).",
-    "Detalles, detalles, detalles.",
-    "Conozca la propiedad.",
-    "Conozca los participantes. (Conozca a la gente: sobre su pasado, su futuro, sus relaciones).",
-    "Obtenga compromisos y pida cuentas.",
-    "Controle el flujo de negocios y comunicaciones.",
-    "Hágalo ahora, hágalo ahora, hágalo ahora.",
-    "Usted cosecha lo que siembra.",
-    "Rodéese de buenas personas.",
-    "Establezca y mantenga nuevas relaciones con proveedores existentes.",
-    "Tenga todas las opciones.",
-    "Sea persistente.",
-    "No confunda actividad con productividad.",
-    "Aprenda sus lecciones una sola vez.",
-    "Maneje los problemas cuando estén pequeños.",
-    "Asuma que todas las comunicaciones son grabadas.",
-    "Verifique todo.",
-    "El papeleo debe ser al 100%.",
-    "El que habla primero, pierde.",
-    "No asuma nada (respecto a terceros).",
-    "No se puede vender desde un camión.",
-    "Este negocio no es para los débiles de corazón. (Los bienes raíces no son para cobardes.)",
-    "Retracta.",
-    "Enfóquese en cómo se puede hacer, no en cómo no se puede hacer.",
-    "No deje que la gente sepa que su espalda está contra la pared. (Actúe con estrategia).",
-    "Prepárese, alcance y supere sus metas.",
-    "Sueñe en grande!"
-]
-
-SUGERENCIAS_ENTRENAMIENTO = [
-    "Las finanzas personales, la base de todo.",
-    "Si gastas todo o más de lo que ganas, nunca lograrás tu libertad financiera.",
-    "No importa lo mucho que trabajes, si no organizas tus finanzas personales nunca podrás ser independiente financieramente.",
-    "Aumentar los gastos en 20 dólares aquí o allá puede no parecer mucho, pero acaban siendo 240 dólares al año.",
-    "No compres a crédito lo que no puedes pagar al contado.",
-    "Ahorra antes de gastar, no al revés.",
-    "El dinero que ahorras hoy es la libertad que tendrás mañana.",
-    "No te endeudes para mantener un estilo de vida que no puedes costear.",
-    "Invierte en tu educación financiera, es la mejor inversión que puedes hacer.",
-    "Planifica tu futuro financiero hoy, no lo dejes para mañana."
-]
-
-# Función para mostrar un mensaje motivacional y una sugerencia de entrenamiento
-def mostrar_motivacion_y_sugerencia():
-    st.write("---")
-    st.write("### Mensaje Motivacional 📜")
-    st.write(MOTIVACIONES[len(st.session_state) % len(MOTIVACIONES)])  # Cicla entre los mensajes
-    st.write("### Sugerencia de Entrenamiento 🎯")
-    st.write(SUGERENCIAS_ENTRENAMIENTO[len(st.session_state) % len(SUGERENCIAS_ENTRENAMIENTO)])  # Cicla entre las sugerencias
-    st.write("---")
-
-# Función para validar el correo electrónico
-def validar_email(email):
-    if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
-        return True
-    return False
-
-# Función para validar el teléfono
-def validar_telefono(telefono):
-    if re.match(r"^\+?[0-9]{10,15}$", telefono):  # Acepta números de 10 a 15 dígitos, con o sin +
-        return True
-    return False
-
 # Función para generar un PDF con el informe
 def generar_pdf(usuario, analisis_financiero=None, analisis_inversion=None, analisis_retiro=None):
     pdf = FPDF()
@@ -119,6 +49,18 @@ def generar_pdf(usuario, analisis_financiero=None, analisis_inversion=None, anal
     pdf.output(pdf_output)
     return pdf_output
 
+# Función para validar el correo electrónico
+def validar_email(email):
+    if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
+        return True
+    return False
+
+# Función para validar el teléfono
+def validar_telefono(telefono):
+    if re.match(r"^\+?[0-9]{10,15}$", telefono):  # Acepta números de 10 a 15 dígitos, con o sin +
+        return True
+    return False
+
 # Función para registrar al usuario
 def registrar_usuario():
     st.write("\n¡Bienvenido al Bot de Finanzas Personales De Carlos Devis!")
@@ -137,7 +79,6 @@ def registrar_usuario():
         else:
             st.session_state['usuario'] = {"nombre": nombre, "edad": edad, "email": email, "telefono": telefono}
             st.success("Usuario registrado con éxito.")
-            mostrar_motivacion_y_sugerencia()
             st.session_state['current_tab'] = "Situación Financiera"  # Pasar a la siguiente pestaña
 
 # Función para evaluar la situación financiera
@@ -159,7 +100,6 @@ def evaluar_situacion_financiera():
             st.write(f"Flujo de Efectivo Mensual: ${flujo_efectivo_mensual:.2f}")
 
             st.session_state['situacion_financiera'] = {"activos": activos, "pasivos": pasivos, "ingresos_mensuales": ingresos_mensuales, "gastos_mensuales": gastos_mensuales}
-            mostrar_motivacion_y_sugerencia()
             st.session_state['current_tab'] = "Plan de Inversión"  # Pasar a la siguiente pestaña
 
 # Función para evaluar el plan de inversión
@@ -173,7 +113,6 @@ def evaluar_plan_inversion():
             st.error("Todos los campos son obligatorios.")
         else:
             st.session_state['plan_inversion'] = {"objetivos": objetivos, "preferencias": preferencias}
-            mostrar_motivacion_y_sugerencia()
             st.session_state['current_tab'] = "Proyección de Retiro"  # Pasar a la siguiente pestaña
 
 # Función para evaluar la proyección de retiro
@@ -193,7 +132,6 @@ def evaluar_proyeccion_retiro():
             st.error("Los valores no pueden ser negativos.")
         else:
             st.session_state['proyeccion_retiro'] = {"edad_actual": edad_actual, "edad_retiro": edad_retiro, "ingresos_retiro": ingresos_retiro, "gastos_retiro": gastos_retiro, "ahorros_actuales": ahorros_actuales, "ahorros_proyectados": ahorros_proyectados}
-            mostrar_motivacion_y_sugerencia()
             st.session_state['current_tab'] = "Resumen"  # Pasar a la siguiente pestaña
 
 # Función para analizar con OpenAI
@@ -216,9 +154,9 @@ def generar_grafica_status(status):
     fig, ax = plt.subplots(figsize=(10, 2))
     
     # Definir el color de la barra según el porcentaje
-    if status <= 40:
+    if status <= 50:
         color = 'red'
-    elif status <= 85:
+    elif status <= 80:
         color = 'yellow'
     else:
         color = 'green'
