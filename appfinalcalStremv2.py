@@ -436,7 +436,7 @@ def main():
     st.markdown("""
     <div class="logo-container">
         <!-- Reemplaza con tu logo en base64 o URL -->
-        <img src="https://github.com/Santospe2000/pruebasfinalesbot/blob/main/aaaaa.png" width="100">
+        <img src="aaaaa.png" width="100">
     </div>
     """, unsafe_allow_html=True)
     
