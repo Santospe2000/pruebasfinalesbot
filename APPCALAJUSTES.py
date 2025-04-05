@@ -88,15 +88,32 @@ def load_css():
             right: 10px;
         }
         
-        .dataframe {
+        .data-table {
             width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
         
         .tips-container {
-            background-color: #F0F8FF;
-            border-radius: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--azul-oscuro);
             padding: 15px;
-            margin: 15px 0;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
         }
         
         @media (max-width: 768px) {
@@ -329,41 +346,6 @@ def analizar_plan_inversion(objetivos, horizonte, preferencias):
         - **Recomendación**: Investiga el mercado local y considera propiedades en zonas con crecimiento
         """)
     
-    # Sección de tips para encontrar recursos para invertir
-    st.markdown("""
-    <div class="tips-container">
-        <h3>CÓMO ENCONTRAR LOS RECURSOS PARA INVERTIR</h3>
-        <p>Uno de los argumentos que más escucho es: «Me gustaría invertir en bienes raíces, pero no tengo dinero».</p>
-        
-        <h4>1. Organiza tu presupuesto</h4>
-        <p>Dice la psicología Gestalt que para lograr lo que quieres debes comenzar por valorar y agradecer lo que ya tienes: la fortuna más grande comenzó con un simple dólar.</p>
-        
-        <h4>2. Ordeña tu negocio</h4>
-        <p>Recuerdo cuando tenía una empresa con 300 empleados y muchas quincenas sufría para poder pagar los salarios, rogándole al banco que me prestara dinero o a los clientes que pagaran lo que debían, para aun al final llegar a casa sin un centavo para mi familia.</p>
-        
-        <h4>3. Vende cosas que no estás usando</h4>
-        <p>¿Cuántas cosas tienes en tu armario o en tu garaje que no estás usando y que probablemente nunca usarás? Ese automóvil, bote, moto... todo se puede vender y convertir en liquidez para tu próxima propiedad.</p>
-        
-        <h4>4. Vende bienes raíces</h4>
-        <p>Una manera que yo les sugiero a mis alumnos para que aprendan de bienes raíces, ganen algo de dinero y encuentren oportunidades, es que se vuelvan agentes de bienes raíces, que se acerquen a varias oficinas y digan que quieren trabajar en ello.</p>
-        
-        <h4>5. Ofrece tus servicios profesionales</h4>
-        <p>Ingrid es arquitecta y vive en Berlín. Pensaba que para ella comprar un apartamento en esa ciudad era imposible y con su esposo hacían lo posible para llegar a fin de mes.</p>
-        
-        <h4>6. Cambia de trabajo</h4>
-        <p>Cuando alguien me cuenta que no le gusta su trabajo o que no le pagan bien, yo le pregunto: —¿Has buscado otro trabajo? —Sí, estoy pensando en cambiar —me responde normalmente la persona.</p>
-        
-        <h4>7. Auto promuévete dentro de tu propia empresa</h4>
-        <p>No siempre es necesario salir de la empresa, a veces es posible buscar un cambio dentro de ella. Habla, prepárate para lo que quieres conseguir y mantén el foco, la actitud y las acciones para lograrlo.</p>
-        
-        <h4>8. Sal de todos los «negocios» que no te están produciendo</h4>
-        <p>Recuerdo una historia que se cuenta mucho de un borrachito que decía: «¡Pero, cómo voy a dejar el trago después de toda la plata que he gastado!».</p>
-        
-        <h4>9. Cambia tu automóvil por una cuota inicial</h4>
-        <p>Para la mentalidad del consumidor es muy importante tener un buen automóvil, «El auto del año» como le dicen los vendedores. No te imaginas cuántas familias arruinan su capacidad de crecer financieramente porque aceptan unas cuotas desproporcionadas para sus ingresos solo por poder comprarse «un buen auto».</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
     return {
         "objetivos": objetivos,
         "horizonte": horizonte,
@@ -532,123 +514,801 @@ def main():
             else:
                 st.warning("Por favor completa todos los campos obligatorios")
     
-    # Paso 2: Datos financieros - Presupuesto y Flujo de Caja
+    # Paso 2: Datos financieros - Modificado según lo solicitado
     if 'usuario_id' in st.session_state:
         with st.container():
             st.subheader("📊 Elaborar mi presupuesto")
             st.markdown("""
-            **Ejercicio:** Comienza tú también por hacer un presupuesto detallado de tu gasto diario y mensual, 
-            tanto el tuyo como el de cada una de las personas de tu familia. Mira los extractos de las cuentas 
-            y las tarjetas de débito y crédito, y anota también todo lo que gastas en efectivo. A partir de 
-            esta información, determina cuáles son los huecos que tiene tu tubería financiera y decide qué 
-            pasos tomar para empezar a cubrirlos. Una vez que encuentres el problema… ¡Manos a la obra!
+            **Ejercicio:** Comienza tú también por hacer un presupuesto detallado de tu
+            gasto diario y mensual, tanto el tuyo como el de cada una de las
+            personas de tu familia. Mira los extractos de las cuentas y las
+            tarjetas de débito y crédito, y anota también todo lo que gastas en
+            efectivo. A partir de esta información, determina cuáles son los
+            huecos que tiene tu tubería financiera y decide qué pasos tomar
+            para empezar a cubrirlos. Una vez que encuentres el problema…
+            ¡Manos a la obra!
             """)
             
-            # Cuadro de activos y pasivos
-            st.markdown("### 📋 Registro de Activos y Pasivos")
-            
-            activos_data = {
-                "Descripción": ["Inmueble 1", "Inmueble 2", "Automóvil 1", "Automóvil 2", "Muebles", 
-                               "Joyas", "Arte", "Efectivo cuenta 1", "Efectivo cuenta 2", 
-                               "Deudas por cobrar", "Bonos o títulos valores", "Fondo de retiro", 
-                               "Bonos o derechos laborales", "Otros", "Otros", "Total"],
-                "Valor Activos": [0.0] * 16,
-                "Valor Deuda": [0.0] * 16
-            }
-            
-            activos_df = st.data_editor(
-                activos_data,
-                column_config={
-                    "Descripción": st.column_config.TextColumn("Descripción", width="medium"),
-                    "Valor Activos": st.column_config.NumberColumn("Valor Activos", format="$%.2f"),
-                    "Valor Deuda": st.column_config.NumberColumn("Valor Deuda", format="$%.2f")
-                },
-                num_rows="fixed",
-                hide_index=True
-            )
-            
-            total_activos = activos_df["Valor Activos"].sum()
-            total_pasivos = activos_df["Valor Deuda"].sum()
-            
-            # Flujo de caja mensual
+            st.subheader("Activos y Pasivos")
             st.markdown("""
-            ### 💰 Veamos ahora tu flujo de caja mensual
-            **Ten en cuenta que algunos de los gastos de este presupuesto no son mensuales sino anuales.**
+            <table class="data-table">
+                <tr>
+                    <th>Descripción</th>
+                    <th>Valor ($)</th>
+                </tr>
+                <tr>
+                    <td>Inmueble 1</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Inmueble 2</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Automóvil 1</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Automóvil 2</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Muebles</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Joyas</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Arte</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Efectivo cuenta 1</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Efectivo cuenta 2</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Deudas por cobrar</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Bonos o títulos valores</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Fondo de retiro</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Bonos o derechos laborales</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 1</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 2</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 3</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Otra deuda 1</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Otra deuda 2</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Otra deuda 3</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="1000"></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td><input type="number" min="0" step="1000" readonly></td>
+                </tr>
+            </table>
+            """, unsafe_allow_html=True)
             
-            Por ejemplo, si el impuesto de la casa es de 1.200 dólares al año, debes dividirlo por 12, 
-            lo que te arrojará un resultado de 100 dólares mensuales. Entonces colocarás en el presupuesto 
-            100 dólares. Lo mismo puede suceder con la ropa o las vacaciones. Se hace un presupuesto y se 
-            reserva cada mes una doceava parte.
+            st.subheader("Veamos ahora tu flujo de caja mensual")
+            st.markdown("""
+            **Ten en cuenta que algunos de los gastos de este presupuesto no
+            son mensuales sino anuales.**
+            
+            Por ejemplo, si el impuesto de la casa es de 1.200 dólares al año,
+            debes dividirlo por 12, lo que te arrojará un resultado de 100
+            dólares mensuales. Entonces colocarás en el presupuesto 100
+            dólares. Lo mismo puede suceder con la ropa o las vacaciones. Se
+            hace un presupuesto y se reserva cada mes una doceava parte.
             """)
             
-            st.markdown("**Ejercicio: Haz tu flujo de caja mensual**")
+            st.markdown("""
+            **Ejercicio:** Haz tu Flujo de caja mensual
+            <table class="data-table">
+                <tr>
+                    <th>Detalle</th>
+                    <th>Subtotal ($)</th>
+                    <th>Total ($)</th>
+                    <th>% de ingresos</th>
+                </tr>
+                <tr>
+                    <td>Gasto de Inmueble 1</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ahorros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Hipoteca</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Impuestos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Administración</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mantenimiento</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Gasto del Inmueble 2</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Servicios</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Hipoteca</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Impuestos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Administración</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mantenimiento</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Electricidad</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Agua</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Gas</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Teléfono</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>App/Suscripciones</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Internet</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mercados</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Restaurantes</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Gastos diarios café/merienda</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Alimentación</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cigarrillos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Buses/Trenes</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Transporte</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cuota automóvil 1</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cuota automóvil 2</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Gasolina</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Impuestos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Peajes</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mantenimiento</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Matrículas escolares</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Colegio</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Parqueadero</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Hijos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Actividades Extra</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mesada</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Útiles escolares</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Regalos y fiestas</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Clases extra</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Terapias/Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ayuda doméstica</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Viajes escolares</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cuota alimentaria</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Educación adultos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Dentista</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro médico</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Salud</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Medicinas</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Pagos no cubiertos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Mascotas</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Comida</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ropa adultos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ropa hijos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cuidados</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Vestuario</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Uniformes hijos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Implementos deportivos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Salón de belleza</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Peluquería</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Cosméticos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros gastos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Regalos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Vacaciones</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Salidas de fin de semana</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ayuda a parientes</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Donaciones</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros seguros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Gastos Misceláneos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Hobbies/Pasatiempos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro médico</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro dentista</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro de vida</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros seguros</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Seguro mortuorio</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Deudas</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Deudas familiares</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Orta deuda 2</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 1</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 2</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Tarjeta de crédito 3</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otra deuda 1</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Deuda con la empresa</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Crédito con educación</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Total gastos mensuales</td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ingresos mensuales adulto 1</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Ingresos mensuales adulto 2</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Otros ingresos</td>
+                    <td><input type="number" min="0" step="10"></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+                <tr>
+                    <td>Saldo mensual</td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" step="10" readonly></td>
+                    <td><input type="number" min="0" max="100" step="0.1" readonly></td>
+                </tr>
+            </table>
+            """, unsafe_allow_html=True)
             
-            flujo_data = {
-                "Detalle": [
-                    "Gasto de Inmueble 1", "Ahorros", "Hipoteca", "Impuestos", "Administración", "Otros", "Mantenimiento",
-                    "Gasto del Inmueble 2", "Servicios", "Hipoteca", "Impuestos", "Administración", "Mantenimiento",
-                    "Electricidad", "Agua", "Gas", "Teléfono", "App/Suscripciones", "Internet", "Otros",
-                    "Mercados", "Restaurantes", "Gastos diarios café/merienda", "Alimentación", "Cigarrillos",
-                    "Buses/Trenes", "Transporte", "Otros", "Cuota automóvil 1", "Cuota automóvil 2", "Gasolina",
-                    "Impuestos", "Peajes", "Mantenimiento", "Matrículas escolares", "Colegio", "Seguros", "Parqueadero",
-                    "Otros", "Hijos", "Actividades Extra", "Mesada", "Útiles escolares", "Regalos y fiestas",
-                    "Clases extra", "Terapias/Otros", "Ayuda doméstica", "Viajes escolares", "Cuota alimentaria",
-                    "Otros Educación adultos", "Dentista", "Seguro médico", "Salud", "Medicinas", "Pagos no cubiertos",
-                    "Otros", "Seguro", "Mascotas", "Comida", "Ropa adultos", "Ropa hijos", "Cuidados", "Otros",
-                    "Vestuario", "Uniformes hijos", "Implementos deportivos", "Salón de belleza", "Peluquería",
-                    "Cosméticos", "Otros", "Otros gastos", "Regalos", "Vacaciones", "Salidas de fin de semana",
-                    "Ayuda a parientes", "Donaciones", "Otros seguros", "Gastos Misceláneos", "Hobbies/Pasatiempos",
-                    "Seguro médico", "Seguro dentista", "Seguro de vida", "Otros seguros", "Seguro mortuorio",
-                    "Deudas", "Deudas familiares", "Otra deuda 2", "Tarjeta de crédito 1", "Tarjeta de crédito 2",
-                    "Tarjeta de crédito 3", "Otra deuda 1", "Deuda con la empresa", "Crédito con educación",
-                    "Total gastos mensuales", "Ingresos mensuales adulto 1", "Ingresos mensuales adulto 2", "Otros ingresos",
-                    "Saldo mensual"
-                ],
-                "Subtotal": [0.0] * 93,
-                "Total": [0.0] * 93,
-                "% de ingresos": [0.0] * 93
-            }
-            
-            flujo_df = st.data_editor(
-                flujo_data,
-                column_config={
-                    "Detalle": st.column_config.TextColumn("Detalle", width="medium"),
-                    "Subtotal": st.column_config.NumberColumn("Subtotal", format="$%.2f"),
-                    "Total": st.column_config.NumberColumn("Total", format="$%.2f"),
-                    "% de ingresos": st.column_config.NumberColumn("% de ingresos", format="%.2f%%")
-                },
-                num_rows="fixed",
-                hide_index=True,
-                height=800
-            )
-            
-            total_gastos = flujo_df.loc[flujo_df["Detalle"] == "Total gastos mensuales", "Total"].values[0]
-            total_ingresos = flujo_df.loc[flujo_df["Detalle"] == "Ingresos mensuales adulto 1", "Total"].values[0] + \
-                            flujo_df.loc[flujo_df["Detalle"] == "Ingresos mensuales adulto 2", "Total"].values[0] + \
-                            flujo_df.loc[flujo_df["Detalle"] == "Otros ingresos", "Total"].values[0]
-            saldo_mensual = total_ingresos - total_gastos
+            # Campos para ingresar los totales
+            col1, col2 = st.columns(2)
+            ingresos = col1.number_input("Ingresos Mensuales Totales ($)", min_value=0.0, value=3000.0, step=100.0)
+            gastos = col1.number_input("Gastos Mensuales Totales ($)", min_value=0.0, value=2500.0, step=100.0)
+            activos = col2.number_input("Activos Totales ($)", min_value=0.0, value=50000.0, step=1000.0)
+            pasivos = col2.number_input("Pasivos Totales ($)", min_value=0.0, value=20000.0, step=1000.0)
             
             if st.button("Analizar mi situación financiera"):
-                st.session_state['datos_financieros'] = (total_ingresos, total_gastos, total_activos, total_pasivos)
-                analisis = analizar_situacion_financiera(total_ingresos, total_gastos, total_activos, total_pasivos)
+                st.session_state['datos_financieros'] = (ingresos, gastos, activos, pasivos)
+                analisis = analizar_situacion_financiera(ingresos, gastos, activos, pasivos)
                 st.session_state['reporte_data']['finanzas'] = {
-                    'ingresos': total_ingresos,
-                    'gastos': total_gastos,
-                    'activos': total_activos,
-                    'pasivos': total_pasivos
+                    'ingresos': ingresos,
+                    'gastos': gastos,
+                    'activos': activos,
+                    'pasivos': pasivos
                 }
                 st.session_state['reporte_data']['analisis']['resumen'] = analisis['resumen']
                 
                 # Generar y mostrar plan de trabajo
-                plan = generar_plan_trabajo(total_ingresos, total_gastos, total_activos, total_pasivos)
+                plan = generar_plan_trabajo(ingresos, gastos, activos, pasivos)
                 st.subheader("📝 Plan de Trabajo Financiero Personalizado")
                 st.write(plan)
                 st.session_state['reporte_data']['analisis']['plan_trabajo'] = plan
     
-    # Paso 3: Plan de inversión
+    # Paso 3: Plan de inversión con los ajustes solicitados
     if 'datos_financieros' in st.session_state:
         with st.container():
             st.subheader("📈 Plan de Inversión")
+            
+            # Sección de tips como habladores
+            with st.expander("💡 CÓMO ENCONTRAR LOS RECURSOS PARA INVERTIR"):
+                st.markdown("""
+                <div class="tips-container">
+                    <p><strong>Uno de los argumentos que más escucho es:</strong> «Me gustaría invertir en bienes raíces, pero no tengo dinero».</p>
+                    
+                    <p><strong>1. Organiza tu presupuesto</strong><br>
+                    Dice la psicología Gestalt que para lograr lo que quieres debes comenzar por valorar y agradecer lo que ya tienes: la fortuna más grande comenzó con un simple dólar.</p>
+                    
+                    <p><strong>2. Ordeña tu negocio</strong><br>
+                    Recuerdo cuando tenía una empresa con 300 empleados y muchas quincenas sufría para poder pagar los salarios, rogándole al banco que me prestara dinero o a los clientes que pagaran lo que debían, para aun al final llegar a casa sin un centavo para mi familia.</p>
+                    
+                    <p><strong>3. Vende cosas que no estás usando</strong><br>
+                    ¿Cuántas cosas tienes en tu armario o en tu garaje que no estás usando y que probablemente nunca usarás? Ese automóvil, bote, moto... todo se puede vender y convertir en liquidez para tu próxima propiedad.</p>
+                    
+                    <p><strong>Aprende a vender mejor tu talento o producto</strong><br>
+                    Belén tiene 28 años y estudió una carrera técnica para ayudar a las mujeres a prepararse mejor para el parto y que tengan menos dolor, aplicando técnicas sencillas para cuidar más de los cuerpos de las madres y la salud de los bebés.</p>
+                    
+                    <p><strong>4. Vende bienes raíces</strong><br>
+                    Una manera que yo les sugiero a mis alumnos para que aprendan de bienes raíces, ganen algo de dinero y encuentren oportunidades, es que se vuelvan agentes de bienes raíces, que se acerquen a varias oficinas y digan que quieren trabajar en ello.</p>
+                    
+                    <p><strong>5. Ofrece tus servicios profesionales</strong><br>
+                    Ingrid es arquitecta y vive en Berlín. Pensaba que para ella comprar un apartamento en esa ciudad era imposible y con su esposo hacían lo posible para llegar a fin de mes.</p>
+                    
+                    <p><strong>6. Cambia de trabajo</strong><br>
+                    Cuando alguien me cuenta que no le gusta su trabajo o que no le pagan bien, yo le pregunto:<br>
+                    —¿Has buscado otro trabajo?<br>
+                    —Sí, estoy pensando en cambiar —me responde normalmente la persona.</p>
+                    
+                    <p><strong>7. Auto promuévete dentro de tu propia empresa</strong><br>
+                    No siempre es necesario salir de la empresa, a veces es posible buscar un cambio dentro de ella. Habla, prepárate para lo que quieres conseguir y mantén el foco, la actitud y las acciones para lograrlo.</p>
+                    
+                    <p><strong>8. Sal de todos los «negocios» que no te están produciendo</strong><br>
+                    Recuerdo una historia que se cuenta mucho de un borrachito que decía: «¡Pero, cómo voy a dejar el trago después de toda la plata que he gastado!».</p>
+                    
+                    <p><strong>9. Cambia tu automóvil por una cuota inicial</strong><br>
+                    Para la mentalidad del consumidor es muy importante tener un buen automóvil, «El auto del año» como le dicen los vendedores. No te imaginas cuántas familias arruinan su capacidad de crecer financieramente porque aceptan unas cuotas desproporcionadas para sus ingresos solo por poder comprarse «un buen auto».</p>
+                </div>
+                """, unsafe_allow_html=True)
             
             objetivos = st.text_input("Objetivos financieros (ej: comprar casa, retiro temprano)", 
                                     "Crear fuentes de ingreso pasivo")
